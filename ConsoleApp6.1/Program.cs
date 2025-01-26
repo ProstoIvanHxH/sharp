@@ -19,13 +19,13 @@ namespace Example //класса Stopwatch
             timer.Start(); //включаем таймер
             List<double> list = new List<double>();
             list.Add(2);
-            for (int i = 3; i <= 10; i++)
+            for (int i = 3; i <= n; i++)
             {
                 int k = 0;
-                foreach (double d in list)
+                for (int j = 2; j <= Math.Sqrt(i); j++)
                 {
 
-                    if (i % d == 0)
+                    if (i % j == 0)
                     {
                         k++;
                         break;
