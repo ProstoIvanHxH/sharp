@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace PhoneBookExample
 {
     // 1) Абстрактный класс телефонного справочника
+    [Serializable]
     public abstract class PhoneBookEntry
     {
         // Адрес и телефон есть у любого наследника
@@ -26,6 +28,7 @@ namespace PhoneBookExample
     }
 
     // 2) Класс "Персона"
+    [Serializable]
     public class Person : PhoneBookEntry
     {
         public string LastName { get; set; }
@@ -53,6 +56,7 @@ namespace PhoneBookExample
     }
 
     // Класс "Организация"
+    [Serializable]
     public class Organization : PhoneBookEntry
     {
         public string OrganizationName { get; set; }
@@ -92,6 +96,7 @@ namespace PhoneBookExample
     }
 
     // Класс "Друг" (фактически тот же Person, но с датой рождения)
+    [Serializable]
     public class Friend : PhoneBookEntry
     {
         public string LastName { get; set; }
@@ -124,19 +129,16 @@ namespace PhoneBookExample
     {
         static void Main(string[] args)
         {
+
             // 3) Формируем базу (список) из данных, считанных из файла
-            // Предположим, что в файле "data.txt" каждая строка имеет формат:
-            // Person;Иванов;ул. Пушкина, д.1;+7-999-123-45-67
-            // Organization;ООО Ромашка;ул. Ленина, д.10;+7-111-222-33-44;+7-111-222-33-55;Иванов
-            // Friend;Петров;ул. Горького, д.5;+7-222-333-44-55;1990-10-12
-            // и т.д.
-
-            string filePath = "data.txt"; // Задайте свой путь к файлу
+            
+            
+            string filePath = "input.dat"; // Задайте свой путь к файлу
             List<PhoneBookEntry> phoneBook = new List<PhoneBookEntry>();
-
-            if (File.Exists(filePath))
+            BinaryFormatter formatter = new BinaryFormatter();
+            if (!File.Exists(filePath))
             {
-                string[] lines = File.ReadAllLines(filePath);
+                string[] lines = File.ReadAllLines("data.txt");
                 foreach (var line in lines)
                 {
                     if (string.IsNullOrWhiteSpace(line))
@@ -194,20 +196,27 @@ namespace PhoneBookExample
                             break;
                     }
                 }
-            }
+            } 
             else
             {
-                Console.WriteLine("Файл не найден. Проверьте путь к файлу!");
-                return;
+                using (FileStream f = new FileStream("input.dat", FileMode.OpenOrCreate))
+                {
+                    phoneBook = (List<PhoneBookEntry>)formatter.Deserialize(f);
+                    Console.WriteLine("Десериализация: ");
+                }
+                
             }
 
+            phoneBook.Add(new Person("asd","qwer","879564"));
+           
+            Console.ReadLine();
             // Выводим полную информацию из базы на экран
             Console.WriteLine("Полная информация обо всех записях:");
             foreach (var entry in phoneBook)
             {
                 entry.PrintInfo();
             }
-
+            Console.ReadLine();
             // Организуем поиск по фамилии
             Console.WriteLine("Введите фамилию для поиска:");
             string searchLastName = Console.ReadLine();
@@ -227,9 +236,12 @@ namespace PhoneBookExample
             {
                 Console.WriteLine("Записей с такой фамилией не найдено.");
             }
+            using (FileStream f = new FileStream("input.dat", FileMode.OpenOrCreate))
+            {
+                formatter.Serialize(f, phoneBook);
+            }
+            Console.ReadLine();
 
-            Console.WriteLine("Для выхода нажмите любую клавишу...");
-            Console.ReadKey();
         }
     }
 }
