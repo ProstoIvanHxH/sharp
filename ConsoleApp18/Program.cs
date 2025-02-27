@@ -1,124 +1,11 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace PhoneBookExample
+namespace ConsoleApp18
 {
-    // 1) Абстрактный класс телефонного справочника
-    public abstract class PhoneBookEntry
-    {
-        // Адрес и телефон есть у любого наследника
-        public string Address { get; set; }
-        public string PhoneNumber { get; set; }
-
-        // Конструктор базового класса
-        protected PhoneBookEntry(string address, string phoneNumber)
-        {
-            Address = address;
-            PhoneNumber = phoneNumber;
-        }
-
-        // Метод для вывода информации на экран (должен быть реализован в потомках)
-        public abstract void PrintInfo();
-
-        // Метод для проверки соответствия поисковому критерию (например, фамилии)
-        public abstract bool MatchesCriteria(string lastName);
-    }
-
-    // 2) Класс "Персона"
-    public class Person : PhoneBookEntry
-    {
-        public string LastName { get; set; }
-
-        public Person(string lastName, string address, string phoneNumber)
-            : base(address, phoneNumber)
-        {
-            LastName = lastName;
-        }
-
-        public override void PrintInfo()
-        {
-            Console.WriteLine("Тип: Персона");
-            Console.WriteLine($"Фамилия: {LastName}");
-            Console.WriteLine($"Адрес: {Address}");
-            Console.WriteLine($"Телефон: {PhoneNumber}");
-            Console.WriteLine(new string('-', 30));
-        }
-
-        public override bool MatchesCriteria(string lastName)
-        {
-            // Простая проверка на совпадение фамилии
-            return LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase);
-        }
-    }
-
-    // Класс "Организация"
-    public class Organization : PhoneBookEntry
-    {
-        public string OrganizationName { get; set; }
-        public string Fax { get; set; }
-        public string ContactPerson { get; set; }
-
-        public Organization(
-            string organizationName,
-            string address,
-            string phoneNumber,
-            string fax,
-            string contactPerson)
-            : base(address, phoneNumber)
-        {
-            OrganizationName = organizationName;
-            Fax = fax;
-            ContactPerson = contactPerson;
-        }
-
-        public override void PrintInfo()
-        {
-            Console.WriteLine("Тип: Организация");
-            Console.WriteLine($"Название: {OrganizationName}");
-            Console.WriteLine($"Адрес: {Address}");
-            Console.WriteLine($"Телефон: {PhoneNumber}");
-            Console.WriteLine($"Факс: {Fax}");
-            Console.WriteLine($"Контактное лицо: {ContactPerson}");
-            Console.WriteLine(new string('-', 30));
-        }
-
-        public override bool MatchesCriteria(string lastName)
-        {
-            // Организация обычно не ищется по фамилии, 
-            // поэтому возвращаем false
-            return false;
-        }
-    }
-
-    // Класс "Друг" (фактически тот же Person, но с датой рождения)
-    public class Friend : PhoneBookEntry
-    {
-        public string LastName { get; set; }
-        public DateTime Birthday { get; set; }
-
-        public Friend(string lastName, string address, string phoneNumber, DateTime birthday)
-            : base(address, phoneNumber)
-        {
-            LastName = lastName;
-            Birthday = birthday;
-        }
-
-        public override void PrintInfo()
-        {
-            Console.WriteLine("Тип: Друг");
-            Console.WriteLine($"Фамилия: {LastName}");
-            Console.WriteLine($"Адрес: {Address}");
-            Console.WriteLine($"Телефон: {PhoneNumber}");
-            Console.WriteLine($"Дата рождения: {Birthday.ToShortDateString()}");
-            Console.WriteLine(new string('-', 30));
-        }
-
-        public override bool MatchesCriteria(string lastName)
-        {
-            return LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase);
-        }
-    }
+  
 
     class Program
     {
@@ -205,7 +92,7 @@ namespace PhoneBookExample
             Console.WriteLine("Полная информация обо всех записях:");
             foreach (var entry in phoneBook)
             {
-                entry.PrintInfo();
+                Console.WriteLine( entry.ToString());
             }
 
             // Организуем поиск по фамилии
@@ -218,7 +105,7 @@ namespace PhoneBookExample
             {
                 if (entry.MatchesCriteria(searchLastName))
                 {
-                    entry.PrintInfo();
+                    Console.WriteLine(entry.ToString());
                     found = true;
                 }
             }

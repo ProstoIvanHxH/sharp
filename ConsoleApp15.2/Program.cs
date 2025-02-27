@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Net.WebRequestMethods;
 namespace MyProgram
 {
@@ -52,23 +54,27 @@ namespace MyProgram
             List<Car> list = new List<Car>();
 
             var students = from n in array
-                           where n.mark == "lada"
-                           orderby n.year
-                           select n;
+            where n.mark == "lada"
+            orderby n.year
+            group n by n.year.Substring(0, 4);
 
-            
-                using (StreamWriter fileOut = new StreamWriter("out.txt", false))
+
+            using (StreamWriter fileOut = new StreamWriter("out.txt", false))
+            {
+                foreach (var student in students)
                 {
-                foreach (Car student in students)
-                {
+                    fileOut.WriteLine(student.Key);
+                    foreach (var stud in student)
+                    {
 
-                    fileOut.WriteLine(student.Show());
+                        fileOut.WriteLine(stud.Show());
+                    }
+
+
+
                 }
-                   
 
-
-                }
-            
+            }
         }
     }
 }

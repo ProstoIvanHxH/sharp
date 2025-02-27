@@ -15,10 +15,7 @@ namespace DemoMyString
 
         // 2. Конструкторы
 
-        /// <summary>
-        /// Конструктор, создающий строку заданной длины (по умолчанию заполненную пробелами)
-        /// </summary>
-        /// <param name="length">Длина строки</param>
+        
         public MyString(int length)
         {
             // Допустим, создаём строку из length пробелов
@@ -28,10 +25,7 @@ namespace DemoMyString
             line = new string(' ', length);
         }
 
-        /// <summary>
-        /// Конструктор на основе заданного строкового литерала
-        /// </summary>
-        /// <param name="str">Исходная строка</param>
+       
         public MyString(string str)
         {
             // Если str == null, то можно принять решение хранить пустую строку или выбросить исключение.
@@ -39,10 +33,7 @@ namespace DemoMyString
             line = str ?? string.Empty;
         }
 
-        /// <summary>
-        /// Конструктор копирования (на основе существующего экземпляра класса)
-        /// </summary>
-        /// <param name="other">Другой объект MyString</param>
+       
         public MyString(MyString other)
         {
             if (other == null)
@@ -53,19 +44,13 @@ namespace DemoMyString
 
         // 3. Методы
 
-        /// <summary>
-        /// Подсчитать количество цифр в строке
-        /// </summary>
-        /// <returns>Число символов, являющихся цифрами</returns>
+     
         public int CountDigits()
         {
             return line.Count(char.IsDigit);
         }
 
-        /// <summary>
-        /// Подсчитать сумму цифр в строке
-        /// </summary>
-        /// <returns>Сумма всех цифр, содержащихся в строке</returns>
+      
         public int SumDigits()
         {
             // Каждая цифра '0'..'9' при преобразовании в int даст 48..57, но для вычитания смещения '0' используем: (c - '0')
@@ -74,29 +59,19 @@ namespace DemoMyString
 
         // 4. Перегрузка методов предка Object
 
-        /// <summary>
-        /// Переопределение ToString, возвращающее саму строку
-        /// </summary>
-        /// <returns>Значение внутренней строки</returns>
+        
         public override string ToString()
         {
             return line;
         }
 
-        /// <summary>
-        /// Переопределение GetHashCode
-        /// </summary>
-        /// <returns>Хеш-код строки</returns>
+        
         public override int GetHashCode()
         {
             return line.GetHashCode();
         }
 
-        /// <summary>
-        /// Переопределение Equals
-        /// </summary>
-        /// <param name="obj">Объект для сравнения</param>
-        /// <returns>true, если равны, иначе false</returns>
+        
         public override bool Equals(object obj)
         {
             if (obj is MyString other)
@@ -106,11 +81,7 @@ namespace DemoMyString
             return false;
         }
 
-        /// <summary>
-        /// В C# метод GetType() является невиртуальным и не подлежит переопределению.
-        /// Формально мы можем лишь вызвать базовый GetType(), 
-        /// но переопределить его нельзя. Оставим для демонстрации.
-        /// </summary>
+       
         public new Type GetType()
         {
             // Можно вернуть базовый тип (this.GetType()), но обычно это не переопределяется.
@@ -119,20 +90,14 @@ namespace DemoMyString
 
         // 5. Свойства
 
-        /// <summary>
-        /// Свойство для доступа к внутренней строке (доступное для чтения и записи)
-        /// При записи можно сохранять неизменяемость, но в задании сказано "доступно для записи",
-        /// значит допускаем изменить поле через это свойство.
-        /// </summary>
+     
         public string Line
         {
             get => line;
             set => line = value ?? string.Empty; // не даём записать null
         }
 
-        /// <summary>
-        /// Свойство, возвращающее общее количество символов в строке (только для чтения)
-        /// </summary>
+    
         public int Length
         {
             get => line.Length;
@@ -151,13 +116,7 @@ namespace DemoMyString
 
         // 7. Перегрузка операторов
 
-        /// <summary>
-        /// Унарный оператор !:
-        /// Возвращает true, если строка не пустая, иначе false.
-        /// (Необычно, т.к. ! обычно означает логическое отрицание, но делаем по условию)
-        /// </summary>
-        /// <param name="s">Объект MyString</param>
-        /// <returns>true, если строка не пустая, иначе false</returns>
+       
         public static bool operator !(MyString s)
         {
             // Если s == null, примем, что строка как бы пуста
@@ -165,14 +124,7 @@ namespace DemoMyString
             return s.line.Length != 0;
         }
 
-        /// <summary>
-        /// Операторы true/false:
-        /// - true, если строка является палиндромом (без учёта регистра)
-        /// - false, если не палиндром
-        /// 
-        /// В конструкции if (myString) { ... } будет вызываться operator true(MyString).
-        /// Для корректной работы требуется определить оба оператора (true и false).
-        /// </summary>
+      
         public static bool operator true(MyString s)
         {
             if (s is null) return false;
@@ -195,11 +147,7 @@ namespace DemoMyString
             return lower != rev;
         }
 
-        /// <summary>
-        /// Оператор &:
-        /// Возвращает true, если строковые поля двух объектов посимвольно равны (без учёта регистра),
-        /// иначе false.
-        /// </summary>
+        
         public static bool operator &(MyString a, MyString b)
         {
             if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
@@ -208,18 +156,18 @@ namespace DemoMyString
             return string.Equals(a.line, b.line, StringComparison.OrdinalIgnoreCase);
         }
 
-        /// <summary>
-        /// Явное преобразование MyString -> string
-        /// </summary>
-        public static explicit operator string(MyString s)
+       
+        /// преобразование MyString -> string
+        
+        public static implicit operator string(MyString s)
         {
             return s?.line ?? string.Empty;
         }
 
-        /// <summary>
-        /// Явное преобразование string -> MyString
-        /// </summary>
-        public static explicit operator MyString(string s)
+       
+        ///преобразование string -> MyString
+       
+        public static implicit operator MyString(string s)
         {
             return new MyString(s);
         }
@@ -254,16 +202,7 @@ namespace DemoMyString
                     myStrings.Add(ms);
                 }
             }
-            else
-            {
-                Console.WriteLine($"Файл {inputFile} не найден. Будет создан примерный список строк.");
-                // Создадим примерный список, если файла нет
-                myStrings.Add(new MyString("12345"));
-                myStrings.Add(new MyString("RaceCar"));
-                myStrings.Add(new MyString(""));
-                myStrings.Add(new MyString("test"));
-                myStrings.Add(new MyString("999"));
-            }
+           
 
             // 4) Выполним некоторые операции и выведем результат на консоль
             //    Параллельно сформируем список строк для записи в файл.
@@ -272,6 +211,10 @@ namespace DemoMyString
 
             foreach (MyString ms in myStrings)
             {
+                String test = ms;
+                MyString test3 = test;
+                Console.WriteLine(test+ "hggggggggguik");
+                Console.WriteLine(test3 + "hggggggggguik");
                 int digitsCount = ms.CountDigits();
                 int digitsSum = ms.SumDigits();
 

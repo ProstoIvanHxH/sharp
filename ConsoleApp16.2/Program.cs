@@ -51,7 +51,7 @@ namespace MyProgram
             Car[] array = Input();
             List<Car> list = new List<Car>();
 
-            var students = array.Where(n => n.money < 10000);
+            var students = array.Where(n => n.money < 10000).OrderBy(n=>n.year);
 
 
             using (StreamWriter fileOut = new StreamWriter("out.txt", false))
